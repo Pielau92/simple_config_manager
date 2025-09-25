@@ -15,19 +15,18 @@ def load_from_ini(path: str) -> Configs:
     :return: Configurations dataclass instance, containing all loaded configurations values
     """
 
-    mapping = Configs.load_mapping
-
-    kwargs = {}
+    sections = {}
     for field in fields(Configs):
-        if field.name in mapping.keys():
-            kwargs[field.name] = get_ini_section(path, mapping[field.name], field.type)
+        if field.default is None:
+            continue  # if default value 'None' was set, do not try to load section from ini file
         else:
-            continue  # if section is not mapped, do not load from .ini file
-
-    return Configs(**kwargs)
+            sections[field.name] = get_ini_section(path, field.type)
 
 
-def get_ini_section(path: str, section: str, cls: Type[T]) -> T:
+    return Configs(**sections)
+
+
+def get_ini_section(path: str, cls: Type[T]) -> T:
     """Load configuration section from ini file and return as dataclass instance.
 
     For each attribute defined in the passed dataclass, a corresponding key value pair has to be present inside the
@@ -35,7 +34,6 @@ def get_ini_section(path: str, section: str, cls: Type[T]) -> T:
     the dataclass constructor, to return an instance of said class.
 
     :param str path: path to ini file
-    :param str section: name of the section to be loaded used in the ini file
     :param Type[T] cls: class (actual class, not an instance of it) whose instance is used to save configurations
     :return: class instance
     """
@@ -46,6 +44,7 @@ def get_ini_section(path: str, section: str, cls: Type[T]) -> T:
     config.read(path)
 
     # get section, if it exists
+    section = cls._section_name
     if section not in config:
         raise ValueError(f'Section "{section}" not found in {path}')
     cfg_section = config[section]

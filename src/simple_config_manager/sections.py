@@ -1,12 +1,15 @@
 """Contains a dataclass for each section inside the .ini file. Each dataclass consists of configurations with a
-given name and datatype. For Example:
+given name and datatype. If the attribute '_section_name' is not set, it will not be loaded from the .ini file and
+will have to be filled another way (recommended e.g for runtime configurations). For Example:
+
 
 @dataclass
 class Section1:
+    _section_name = 'Section name inside ini file'  # delete line if not to be loaded from ini file
     config1: str        # explanatory comment for config1
-    config2: int        # maximum number of simulations performed simultaneously
-    config3: bool       # if true, override multiprocessing_max with number of cpu cores
-    config4: list[str]  # the evaluation progress is saved after each save interval
+    config2: int
+    config3: bool
+    config4: list[str]
 """
 
 from dataclasses import dataclass
@@ -14,6 +17,7 @@ from dataclasses import dataclass
 
 @dataclass
 class General:
+    _section_name = 'General'
     path_exe: str  # path to TRNSYS executable file
     multiprocessing_max: int  # maximum number of simulations performed simultaneously
     multiprocessing_autodetect: bool  # if true, override multiprocessing_max with number of cpu cores
@@ -23,6 +27,7 @@ class General:
 
 @dataclass
 class Filenames:
+    _section_name = 'Filenames'
     dck_template: str
     logger: str
     trnsys_output: str
@@ -36,6 +41,7 @@ class Filenames:
 class SheetNames:
     """Excel sheet names"""
 
+    _section_name = 'Excel sheet names'
     sim_variants: str
     variant_input: str
     calculation: str
@@ -50,6 +56,7 @@ class SheetNames:
 
 @dataclass
 class ColumnHeaders:
+    _section_name = 'Column headers'
     zone1: list[str]
     zone2: list[str]
     zone3: list[str]
@@ -60,6 +67,7 @@ class ColumnHeaders:
 
 @dataclass
 class Time:
+    _section_name = 'Time'
     timeout_sim: int  # if timeout is reached without starting another simulation, stop whole program [s]
     timeout_open_dck_window: int  # if timeout is reached without opening dck selection window, stop defective simulation [s]
     timeout_open_sim_window: int  # if timeout is reached without opening simulation window, stop defective simulation [s]

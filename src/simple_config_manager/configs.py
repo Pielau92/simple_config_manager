@@ -18,22 +18,6 @@ class Configs:
     time: sections.Time
     runtime: sections.Runtime = None
 
-    """Mapping between: 1) the name of the configuration sections to be imported from the .ini file and 2) the name of
-    their corresponding field name. Sections/fields that are not mapped here will not be loaded from the .ini file and
-    have to be filled another way (recommended e.g for runtime configurations). The mapping is structured as a 
-    dictionary, where:
-        key:    section name inside Configs dataclass
-        value:  section name inside .ini config file
-    """
-
-    load_mapping = {
-        'general': 'General',
-        'filenames': 'Filenames',
-        'sheetnames': 'Excel sheet names',
-        'col_headers': 'Column headers',
-        'time': 'Time',
-    }
-
 
 @dataclass
 class Paths:
