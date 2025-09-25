@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simple_config_manager"
+version = "0.1.0"
+description = """This Python project simplifies the creation and management of .ini configuration files using the
+configparser package. It takes some of the complexity of configparser away, providing an intuitive and
+beginner-friendly interface for users. The goal is to enable developers to easily read, write, and update configuration
+files without deeper understanding of the configparser package."""
+authors = [
+    { name = "Pierre Laurent", email = "laurent@technikum-wien.at" }
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
