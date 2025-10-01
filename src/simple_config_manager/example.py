@@ -8,7 +8,8 @@ from configs import _Configs
 @dataclass
 class FirstSection:
     """Explanatory comment about section (optional)"""
-    _section_name = 'First section' # mandatory field, must correspond with section name used inside .ini file!
+    # mandatory field if to be filled with values from .ini file, must match with section name used inside .ini file!
+    _section_name = 'First section'
 
     use: int  # explanatory comment about configuration (optional)
     any: int
@@ -31,7 +32,6 @@ class AnotherSection:
 
 @dataclass
 class Runtime:
-    _section_name = 'Runtime'
 
     # some configurations are best set during runtime...
     current_time: str
