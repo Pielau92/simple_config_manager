@@ -15,7 +15,7 @@ class _Configs:
     information on how a configuration class can be defined."""
 
     def __init__(self, path_ini: str = None):
-        """Initialize configuration object by loading configurations from an ini file.
+        """Initialize configuration object by reading configurations from an ini file.
 
         :param str path_ini: path to configurations .ini file
         """
@@ -26,18 +26,18 @@ class _Configs:
 
     @staticmethod
     def _get_ini_section(path: str, cls: Type[T]) -> T:
-        """Load configuration section from ini file and return as dataclass instance.
+        """Load configuration section from .ini file and return as dataclass instance.
 
-        For each attribute defined in the passed dataclass, a corresponding key value pair has to be present inside the
-        specified section of the ini file. The value of each corresponding key value pair is collected and then passed to
+        For each of field of the passed dataclass, a matching key value pair has to be present inside the specified
+        section of the .ini file. The value of each corresponding key value pair is collected and then passed to
         the dataclass constructor, to return an instance of said class.
 
-        :param str path: path to ini file
+        :param str path: path to .ini file
         :param Type[T] cls: class (actual class, not an instance of it) whose instance is used to save configurations
         :return: class instance
         """
 
-        # read ini file
+        # read .ini file
         config = configparser.ConfigParser()
         config.optionxform = str  # keep capital letters
         config.read(path)
@@ -48,6 +48,7 @@ class _Configs:
             raise ValueError(f'Section "{section}" not found inside {path}')
         cfg_section = config[section]
 
+        # read values
         kwargs = {}
         for field in fields(cls):
             name = field.name
