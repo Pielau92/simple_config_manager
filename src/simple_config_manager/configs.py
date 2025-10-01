@@ -1,5 +1,6 @@
+import types
 from dataclasses import dataclass, fields
-from typing import Type, TypeVar, List
+from typing import Type, TypeVar, List, Union
 
 import configparser
 
@@ -44,39 +45,50 @@ class _Configs:
         # get section, if it exists
         section = cls._section_name
         if section not in config:
-            raise ValueError(f'Section "{section}" not found in {path}')
+            raise ValueError(f'Section "{section}" not found inside {path}')
         cfg_section = config[section]
 
         kwargs = {}
         for field in fields(cls):
             name = field.name
-            typ = field.type
 
-            if field.name not in cfg_section:
-                raise ValueError(f'Missing key "{field.name}" in [{section}]')
+            if name not in cfg_section:
+                raise ValueError(f'Missing field "{name}" in section "{section}"')
 
-            raw = cfg_section[name]
-
-            # type conversion
-            if typ == int:
-                value = int(raw)
-            elif typ == float:
-                value = float(raw)
-            elif typ == str:
-                value = raw
-            elif typ in {List[str], list[str]}:
-                value = [x.strip() for x in raw.split(',') if x.strip()]
-            elif typ == bool:
-                if raw.lower() in {'true', '1', 'yes', 'on'}:
-                    value = True
-                elif raw.lower() in {'false', '0', 'no', 'off'}:
-                    value = False
-                else:
-                    raise ValueError(f"Invalid boolean value: {raw}")
-            else:
-                raise TypeError(
-                    f'Unsupported field type {typ} with value "{raw}" in section "{section}" inside {path}.')
+            try:
+                value = type_conversion(cfg_section[name], field.type)
+            except ValueError:
+                raise ValueError(f'Field {name} inside {path} has invalid boolean value "{cfg_section[name]}"')
+            except TypeError:
+                raise TypeError(f'Field "{name}" inside {path} has unsupported field type "{field.type}"')
 
             kwargs[name] = value
 
         return cls(**kwargs)
+
+
+def type_conversion(raw: str, typ: type | types.GenericAlias) -> Union[str, int, float, bool, list[str]] | None:
+    """Convert raw string value into a desired type.
+
+    :param str raw: raw string value
+    :param type | types.GenericAlias typ: type
+    :return: value with desired type
+    """
+
+    if typ == str:  # string
+        return raw
+    elif typ == int:  # integer
+        return int(raw)
+    elif typ == float:  # float
+        return float(raw)
+    elif typ in {List[str], list[str]}:  # list of strings
+        return [x.strip() for x in raw.split(',') if x.strip()]
+    elif typ == bool:  # boolean
+        if raw.lower() in {'true', '1', 'yes', 'on'}:
+            return True
+        elif raw.lower() in {'false', '0', 'no', 'off'}:
+            return False
+        else:
+            raise ValueError
+    else:
+        raise TypeError  # if no matching type was found
