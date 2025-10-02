@@ -38,9 +38,12 @@ class _Configs:
         """
 
         # read .ini file
-        config = configparser.ConfigParser()
+        config = configparser.ConfigParser(
+            interpolation=None  # enables the use of % signs inside strings in settings.ini, otherwise error
+        )
         config.optionxform = str  # keep capital letters
-        config.read(path)
+        with open(path, encoding='utf-8') as file:
+            config.read_string(file.read())
 
         # get section, if it exists
         section = cls._section_name
