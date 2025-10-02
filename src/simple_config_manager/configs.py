@@ -60,13 +60,11 @@ class _Configs:
                 raise ValueError(f'Missing field "{name}" in section "{section}"')
 
             try:
-                value = type_conversion(cfg_section[name], field.type)
+                kwargs[name] = type_conversion(cfg_section[name], field.type)
             except ValueError:
                 raise ValueError(f'Field {name} inside {path} has invalid boolean value "{cfg_section[name]}"')
             except TypeError:
                 raise TypeError(f'Field "{name}" inside {path} has unsupported field type "{field.type}"')
-
-            kwargs[name] = value
 
         return cls(**kwargs)
 
