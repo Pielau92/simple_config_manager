@@ -69,7 +69,8 @@ class _Configs:
         return cls(**kwargs)
 
 
-def type_conversion(raw: str, typ: type | types.GenericAlias) -> Union[str, int, float, bool, list[str]] | None:
+def type_conversion(raw: str, typ: type | types.GenericAlias) \
+        -> Union[str, int, float, bool, list[str], list[int], list[float]] | None:
     """Convert raw string value into a desired type.
 
     :param str raw: raw string value
@@ -85,6 +86,10 @@ def type_conversion(raw: str, typ: type | types.GenericAlias) -> Union[str, int,
         return float(raw)
     elif typ in {List[str], list[str]}:  # list of strings
         return [x.strip() for x in raw.split(',') if x.strip()]
+    elif typ in {List[int], list[int]}:
+        return [int(x.strip()) for x in raw.split(',') if x.strip()]
+    elif typ in {List[float], list[float]}:
+        return [float(x.strip()) for x in raw.split(',') if x.strip()]
     elif typ == bool:  # boolean
         if raw.lower() in {'true', '1', 'yes', 'on'}:
             return True

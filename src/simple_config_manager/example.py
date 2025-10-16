@@ -28,6 +28,8 @@ class AnotherSection:
     another_number: float
     some_bool: bool
     some_list: list[str]
+    another_list: list[int]
+    yet_another_list : list[float]
 
 
 @dataclass
