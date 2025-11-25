@@ -37,7 +37,7 @@ class Runtime:
 
     # some configurations are best set during runtime...
     current_time: str
-    some_user_entry: str
+    some_user_entry: int
     selected_path: str
 
 
